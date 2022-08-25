@@ -54,7 +54,7 @@ import java.util.List;
  * 7> (bar,[1661247865106],TimeWindow{start=1661247865105, end=1661247865110})
  * 3> (foo,[1661247865105, 1661247865107, 1661247865108],TimeWindow{start=1661247865105, end=1661247865110})
  *
- * 可观测到，同一个window被多次触发计算，processWindowFunction接收到的聚合结果是累计值，输出到目标存储是需要进行update操作。
+ * 可观测到，同一个window被多次触发计算并发送至processWindowFunction，processWindowFunction接收到的聚合结果是累计值，输出到目标存储是需要进行update操作。
  *
  * @author songhaifeng
  * @date 2022/8/23 15:22
@@ -74,6 +74,7 @@ public class EventTimeTriggerJob {
 
         DataStream<Tuple2<String, Long>> dataStream = env.addSource(new DataSource());
 
+        // 设置watermark，并提取属性值作为eventTime
         SingleOutputStreamOperator<Tuple2<String, Long>> watermarksStream = dataStream.assignTimestampsAndWatermarks(WatermarkStrategy
                 // 由于生产的数据timestamp无乱序，可直接使用forMonotonousTimestamps，无需设置延迟
                 .<Tuple2<String, Long>>forMonotonousTimestamps()
