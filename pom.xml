@@ -26,6 +26,8 @@
         <module>flink-common-dependency</module>
         <module>trigger-sample</module>
         <module>window-operator-sample</module>
+        <module>partitioner-sample</module>
+        <module>accumulator-sample</module>
     </modules>
 
     <dependencyManagement>
